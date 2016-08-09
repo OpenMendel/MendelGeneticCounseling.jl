@@ -1,6 +1,6 @@
 # MendelGeneticCounseling
 
-This [Julia](http://julialang.org/) package performs risk calculates for genetic counseling problems. It is one component of the umbrella [OpenMendel](https://openmendel.github.io) project.
+This [Julia](http://julialang.org/) package performs risk calculations for genetic counseling problems. It is one component of the umbrella [OpenMendel](https://openmendel.github.io) project.
 
 [![](https://img.shields.io/badge/docs-current-blue.svg)](https://OpenMendel.github.io/MendelGeneticCounseling.jl)
 
