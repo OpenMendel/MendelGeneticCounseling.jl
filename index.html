@@ -41,8 +41,8 @@
 
 <p>Genetic Counseling will handle fairly complicated problems involving mutation, reduced penetrance, and linked markers. Genetic Counseling does not provide empiric risks or theoretical risks under models for genetic heterogeneity or polygenic inheritance.</p>
 
-<h2>
-<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h2>
+<h3>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installation</h3>
 
 <p><em>Note: Three OpenMendel packages - <a href="https://github.com/OpenMendel/SnpArrays.jl">SnpArrays</a>, <a href="https://github.com/OpenMendel/Search.jl">Search</a>, and <a href="https://github.com/OpenMendel/MendelBase.jl">MendelBase</a> must be installed before any Mendel analysis packages will run.</em></p>
 
@@ -62,15 +62,15 @@
 <li>
 <a href="#control-file">Control File</a>: Specifies the names of your data input and output files and any optional parameters (<em>keywords</em>) for the analysis. (For a list of common keywords, see <a href="#keywords-table">Keywords Table</a> below).</li>
 <li>
-<a href="#locus-file">Locus File</a>: Names and describes the genetic loci in your data.</li>
+<a href="https://openmendel.github.io/MendelBase.jl/#locus-file">Locus File</a>: Names and describes the genetic loci in your data.</li>
 <li>
-<a href="#pedigree-file">Pedigree File</a>: Gives information about your individuals, such as name, sex, family structure, and ancestry.</li>
+<a href="https://openmendel.github.io/MendelBase.jl/#pedigree-file">Pedigree File</a>: Gives information about your individuals, such as name, sex, family structure, and ancestry.</li>
 <li>
-<a href="#phenotype-file">Phenotype File</a>: Lists the available phenotypes.</li>
+<a href="https://openmendel.github.io/MendelBase.jl/#phenotype-file">Phenotype File</a>: Lists the available phenotypes.</li>
 <li>
 <a href="#snp-definition-file">SNP Definition File</a>: Defines your SNPs with information such as SNP name, chromosome, position, allele names, allele frequencies. This may be a PLINK .bim format file.</li>
 <li>
-<a href="#snp-data-file">SNP Data File</a>: Holds the genotypes for your data set. Must be a standard binary PLINK .bed file in SNP major format. If you have a SNP data file you must have a SNP definition file.</li>
+<a href="https://openmendel.github.io/MendelBase.jl/#snp-data-file">SNP Data File</a>: Holds the genotypes for your data set. Must be a standard binary PLINK .bed file in SNP major format. If you have a SNP data file you must have a SNP definition file.</li>
 </ul>
 
 <h3>
@@ -92,20 +92,19 @@ pedigree_file = genetic counseling 2 PedigreeFrame.txt
 phenotype_file = genetic counseling 2 PhenotypeFrame.txt
 output_file = genetic counseling 2 Output.txt
 #
-# Analysis parameters for GWAS option.
+# Analysis parameters for Genetic Counseling option.
 #
+eliminate_genotypes = false
+lump_alleles        = false
 </code></pre>
 
-<p>eliminate_genotypes = false
-lump_alleles        = false</p>
-
-<p>In the example above, there are six keywords. The first four keywords specify input and output files: <em>genetic counseling 2 LocusFrame.txt</em>, * genetic counseling 2 PedigreeFrame.txt<em>, *genetic counseling 2 PhenotypeFrame.txt</em>, and <em>genetic counseling 2 Output.txt *. The last two keywords specify analysis parameters: * eliminate_genotypes</em> and * lump_alleles<em>. The text after the '=' are the keyword values: *false</em>.</p>
+<p>In the example above, there are six keywords. The first four keywords specify input and output files: <em>genetic counseling 2 LocusFrame.txt</em>, <em>genetic counseling 2 PedigreeFrame.txt</em>, <em>genetic counseling 2 PhenotypeFrame.txt</em>, and <em>genetic counseling 2 Output.txt</em>. The last two keywords specify analysis parameters: <em>eliminate_genotypes</em> and <em>lump_alleles</em>. The text after the '=' are the keyword values: <em>false</em>.</p>
 
 <h3>
 <a id="keywords" class="anchor" href="#keywords" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Keywords<a id="keywords-table"></a>
 </h3>
 
-<p>This is a list of OpenMendel keywords specific to Genetic Counseling. A list of OpenMendel keywords common to most analysis package can be found <a href="https://openmendel.github.io/MendelBase.jl/#keywords-table">here</a>. The names of keywords are <em>not</em> case sensitive. (The keyword <em>values</em> may be case sensitive.)</p>
+<p>This is a list of OpenMendel keywords specific to Genetic Counseling. A list of OpenMendel keywords common to most analysis package can be found <a href="https://openmendel.github.io/MendelBase.jl/#keywords-table">here</a>. The names of keywords are <em>not</em> case sensitive. (The keyword values <em>may</em> be case sensitive.)</p>
 
 <table>
 <thead>
@@ -126,15 +125,13 @@ lump_alleles        = false</p>
 </tbody>
 </table>
 
-<h2>
-<a id="data-files" class="anchor" href="#data-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Files</h2>
+<h3>
+<a id="data-files" class="anchor" href="#data-files" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Data Files</h3>
 
-<p>Genetic Counseling requires a <a href="https://openmendel.github.io/MendelBase.jl/#control-file">Control file</a>, and a <a href="https://openmendel.github.io/MendelBase.jl/#pedigree-file">Pedigree file</a>. Genotype data can be included in the Pedigree file, in which case a <a href="https://openmendel.github.io/MendelBase.jl/#locus-file">Locus file</a> is required. Alternatively, genotype data can be provided in a <a href="#snp-data-file">SNP data file</a>, in which case a <a href="#snp-definition-file">SNP Definition File</a> is required. Details on the format and contents of the Control and data files can be found on the <a href="https://openmendel.github.io/MendelBase.jl">MendelBase</a> documentation page.</p>
+<p>Genetic Counseling requires a <a href="https://openmendel.github.io/MendelBase.jl/#control-file">Control file</a>, and a <a href="https://openmendel.github.io/MendelBase.jl/#pedigree-file">Pedigree file</a>. Genotype data can be included in the Pedigree file, in which case a <a href="https://openmendel.github.io/MendelBase.jl/#locus-file">Locus file</a> is required. Alternatively, genotype data can be provided in a <a href="https://openmendel.github.io/MendelBase.jl/#snp-data-file">SNP data file</a>, in which case a <a href="https://openmendel.github.io/MendelBase.jl/#snp-definition-file">SNP Definition File</a> is required. Details on the format and contents of the Control and data files can be found on the <a href="https://openmendel.github.io/MendelBase.jl">MendelBase</a> documentation page. There are example data files in the Genetic Counseling <a href="https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/docs">docs</a> folder.</p>
 
-<p>There are example data files in the Genetic Counseling <a href="https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/docs">docs</a> folder.</p>
-
-<h2>
-<a id="running-the-analysis" class="anchor" href="#running-the-analysis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running the Analysis</h2>
+<h3>
+<a id="running-the-analysis" class="anchor" href="#running-the-analysis" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Running the Analysis</h3>
 
 <p>To run this analysis package, first launch Julia. Then load the package with the command:</p>
 
@@ -153,11 +150,11 @@ lump_alleles        = false</p>
 
 <p><em>Note: The package is called</em> MendelGeneticCounseling <em>but the analysis function is called simply</em> GeneticCounseling.</p>
 
-<h2>
-<a id="interpreting-the-results" class="anchor" href="#interpreting-the-results" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interpreting the results</h2>
+<h3>
+<a id="interpreting-the-results" class="anchor" href="#interpreting-the-results" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Interpreting the results</h3>
 
-<h2>
-<a id="citation" class="anchor" href="#citation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Citation</h2>
+<h3>
+<a id="citation" class="anchor" href="#citation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Citation</h3>
 
 <p>If you use this analysis package in your research, please cite the following reference in the resulting publications:</p>
 
@@ -165,8 +162,8 @@ lump_alleles        = false</p>
 
 
 
-<h2>
-<a id="acknowledgments" class="anchor" href="#acknowledgments" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acknowledgments</h2>
+<h3>
+<a id="acknowledgments" class="anchor" href="#acknowledgments" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Acknowledgments</h3>
 
 <p>This project is supported by the National Institutes of Health under NIGMS awards R01GM053275 and R25GM103774 and NHGRI award R01HG006139.</p>
       </section>
