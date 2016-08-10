@@ -6,6 +6,5 @@ pedigree_file = genetic counseling 2 PedigreeFrame.txt
 phenotype_file = genetic counseling 2 PhenotypeFrame.txt
 output_file = genetic counseling 2 Output.txt
 #
-#  Analysis Parameters.
+#  Analysis parameters for Genetic Counseling option.
 #
-analysis_option = GeneticCounseling
