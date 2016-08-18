@@ -1,6 +1,6 @@
 # MendelGeneticCounseling
 
-This [Julia](http://julialang.org/) package performs risk calculations for genetic counseling problems. It is one component of the umbrella [OpenMendel](https://openmendel.github.io) project.
+This [Julia](http://julialang.org/) package performs risk calculations for genetic counseling problems. MendelGeneticCounseling is one component of the umbrella [OpenMendel](https://openmendel.github.io) project.
 
 [![](https://img.shields.io/badge/docs-current-blue.svg)](https://OpenMendel.github.io/MendelGeneticCounseling.jl)
 
@@ -22,11 +22,17 @@ There are example data files in the "docs" subfolder of each Mendel package, for
 
 ## Running the Analysis
 
-To run this analysis package, first launch Julia. Then load the package with the command:     julia> using MendelGeneticCounseling
+To run this analysis package, first launch Julia. Then load the package with the command:
+
+     julia> using MendelGeneticCounseling
 
 Next, if necessary, change to the directory containing your files, for example,
 
-     julia> cd("~/path/to/data/files/")Finally, to run the analysis using the parameters in the control file Control_file.txt use the command:     julia> GeneticCounseling("Control_file.txt")
+     julia> cd("~/path/to/data/files/")
+
+Finally, to run the analysis using the parameters in the control file Control_file.txt use the command:
+
+     julia> GeneticCounseling("Control_file.txt")
 
 *Note: The package is called* MendelGeneticCounseling *but the analysis function is called simply* GeneticCounseling.
 
