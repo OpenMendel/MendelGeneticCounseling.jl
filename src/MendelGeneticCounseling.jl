@@ -39,7 +39,7 @@ function GeneticCounseling(control_file = ""; args...)
   # The user specifies the analysis to perform via a set of keywords.
   # Start the keywords at their default values.
   #
-  keyword = set_keyword_defaults!(Dict{ASCIIString, Any}())
+  keyword = set_keyword_defaults!(Dict{AbstractString, Any}())
   #
   # Keywords unique to this analysis should be first defined here
   # by setting their default values using the format:
@@ -96,7 +96,7 @@ The function returns an execution error indicator.
 function genetic_counseling_option(pedigree::Pedigree, person::Person,
   nuclear_family::NuclearFamily, locus::Locus, locus_frame::DataFrame, 
   phenotype_frame::DataFrame, pedigree_frame::DataFrame, 
-  keyword::Dict{ASCIIString, Any})
+  keyword::Dict{AbstractString, Any})
   #
   # Unless there is mutation in a counseling problem,
   # eliminate genotypes and lump alleles.
