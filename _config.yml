@@ -1,0 +1,8 @@
+title: MendelGeneticCounseling.jl
+description: This analysis option performs risk calculations for genetic counseling problems.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-slate
+
+gems:
+  - jekyll-mentions
