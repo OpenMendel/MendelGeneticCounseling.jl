@@ -1,0 +1,5 @@
+Locus,Phenotype,Genotypes
+MD,Affected,"+/+,+/-"
+MD,Normal,"-/-"
+Se,+,"+/+,+/-"
+Se,-,"-/-"
