@@ -375,7 +375,7 @@ end
     @test result2[2] == " The risk =  0.83986."
 end
 
-
+#current coverage = (83, 91) ~ 91.2%
 
 
 
