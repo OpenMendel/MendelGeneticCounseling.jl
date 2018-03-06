@@ -164,7 +164,7 @@ end
                 multi_genotype[:, :, j], par, keyword, start, finish, i)
             answer = 1.0
 
-            # note the following probabilities are provided in the locus frame
+            #note the following probabilities are provided in the locus frame
             if multi_genotype[1, 1, j] == 1; answer *= 1.0e-5; end
             if multi_genotype[1, 1, j] == 2; answer *= 0.99999; end
             if multi_genotype[2, 1, j] == 1; answer *= 1.0e-5; end
@@ -235,7 +235,7 @@ end
                 elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 3
                     @test trans == 0.5
                 elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 4
-                    @test trans == 0.5
+                    @test trans == 0.0
                 elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 2
                     @test trans == 0.0
                 elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 3
@@ -252,78 +252,78 @@ end
 
 
     # now test "genetic counseling 2" files
-    # keyword = set_keyword_defaults!(Dict{AbstractString, Any}())
-    # parameter = set_parameter_defaults(keyword)
-    # process_keywords!(keyword, "genetic counseling 2 Control.txt", "")
-    # (pedigree, person, nuclear_family, locus, snpdata,
-    # locus_frame, phenotype_frame, pedigree_frame, snp_definition_frame) =
-    #     read_external_data_files(keyword)
-    # keyword["eliminate_genotypes"] = true
-    # keyword["lump_alleles"] = true
+    keyword = set_keyword_defaults!(Dict{AbstractString, Any}())
+    parameter = set_parameter_defaults(keyword)
+    process_keywords!(keyword, "genetic counseling 2 Control.txt", "")
+    (pedigree, person, nuclear_family, locus, snpdata,
+    locus_frame, phenotype_frame, pedigree_frame, snp_definition_frame) =
+        read_external_data_files(keyword)
+    keyword["eliminate_genotypes"] = true
+    keyword["lump_alleles"] = true
 
-    # (instruction, elston_stewart_count) = orchestrate_likelihood(pedigree,
-    #     person, nuclear_family, locus, keyword)
-    # par = parameter.par #this is [0.0]
-
-
-    # for n = 1:29
-    #     # n is the variable iterating from instruction.start[ped] to instruction.finish[ped].
-    #     # Here there are 2 pedigrees: first one is from 1 to 30, second one is fron 31 to 60
-    #     operation = instruction.operation[n]
-    #     if operation != transmission_array; continue; end #this avoids some array access errors
-
-    #     start = instruction.extra[n][1]
-    #     finish = instruction.extra[n][2]
-    #     i = instruction.extra[n][3]
-    #     j = instruction.extra[n][4]
+    (instruction, elston_stewart_count) = orchestrate_likelihood(pedigree,
+        person, nuclear_family, locus, keyword)
+    par = parameter.par #this is [0.0]
 
 
-    #     # need 2 genotypes to run transmission, so we construct them
-    #     # and give them the same names as used in elston_stewart_evaluation
-    #     i_genotypes = MendelBase.genotype_count(person, locus, i, start, finish)
-    #     multi_genotype = MendelBase.construct_multigenotypes(person, locus, start, finish,
-    #                                         i_genotypes, i)
+    for n = 1:29
+        # n is the variable iterating from instruction.start[ped] to instruction.finish[ped].
+        # Here there are 2 pedigrees: first one is from 1 to 30, second one is fron 31 to 60
+        operation = instruction.operation[n]
+        if operation != transmission_array; continue; end #this avoids some array access errors
 
-    #     maternal = !person.male[i]
-    #     j_genotypes = MendelBase.genotype_count(person, locus, j, start, finish)
-    #     gamete = MendelBase.construct_gametes(person, locus, start, finish, j_genotypes, j,
-    #                                  maternal)
+        start = instruction.extra[n][1]
+        finish = instruction.extra[n][2]
+        i = instruction.extra[n][3]
+        j = instruction.extra[n][4]
 
-    #     # loop through all possible genotypes, and see if transmission probability is correct
-    #     for l = 1:j_genotypes
-    #         for k = 1:i_genotypes
-    #             trans = MendelGeneticCounseling.transmission_genetic_counseling(person, 
-    #                 locus, gamete[:, l], multi_genotype[:, :, k], par, keyword, 
-    #                 start, finish, i, j)
 
-    #             #gamete[:, l] could be [1, 1] or [1, 2] or [2, 1] 
-    #             #multi_genotype[:, :, k] is either [1;1] or [1;2]
-    #             #we compute the probaiblity that a multi_genotype pass down the gamete
+        # need 2 genotypes to run transmission, so we construct them
+        # and give them the same names as used in elston_stewart_evaluation
+        i_genotypes = MendelBase.genotype_count(person, locus, i, start, finish)
+        multi_genotype = MendelBase.construct_multigenotypes(person, locus, start, finish,
+                                            i_genotypes, i)
 
-    #             println("begin")
-    #             println(gamete[:, l])
-    #             println(multi_genotype[:, :, k])
-    #             println(trans)
-    #             println("end")
+        maternal = !person.male[i]
+        j_genotypes = MendelBase.genotype_count(person, locus, j, start, finish)
+        gamete = MendelBase.construct_gametes(person, locus, start, finish, j_genotypes, j,
+                                     maternal)
 
-    #             # if gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 2
-    #             #     @test trans == 1.0
-    #             # elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 3
-    #             #     @test trans == 0.5
-    #             # elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 4
-    #             #     @test trans == 0.5
-    #             # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 2
-    #             #     @test trans == 0.0
-    #             # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 3
-    #             #     @test trans == 0.5
-    #             # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 4
-    #             #     @test trans == 1.0
-    #             # else
-    #             #     @test_throws(MethodError, "shouldn't have reached here bro")
-    #             # end
-    #         end
-    #     end
-    # end
+        # loop through all possible genotypes, and see if transmission probability is correct
+        for l = 1:j_genotypes
+            for k = 1:i_genotypes
+                trans = MendelGeneticCounseling.transmission_genetic_counseling(person, 
+                    locus, gamete[:, l], multi_genotype[:, :, k], par, keyword, 
+                    start, finish, i, j)
+
+                #gamete[:, l] could be [1, 1] or [1, 2] or [2, 1] 
+                #multi_genotype[:, :, k] is either [1;1] or [1;2]
+                #we compute the probaiblity that a multi_genotype pass down the gamete
+
+                println("begin")
+                println(gamete[:, l])
+                println(multi_genotype[:, :, k])
+                println(trans)
+                println("end")
+
+                # if gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 2
+                #     @test trans == 1.0
+                # elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 3
+                #     @test trans == 0.5
+                # elseif gamete[:, l] == [1] && sum(multi_genotype[:, :, k]) == 4
+                #     @test trans == 0.5
+                # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 2
+                #     @test trans == 0.0
+                # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 3
+                #     @test trans == 0.5
+                # elseif gamete[:, l] == [2] && sum(multi_genotype[:, :, k]) == 4
+                #     @test trans == 1.0
+                # else
+                #     @test_throws(MethodError, "shouldn't have reached here bro")
+                # end
+            end
+        end
+    end
 
 end
 
@@ -363,6 +363,8 @@ end
 end
 
 @testset "final output" begin
+    # note these tests are assuming that eslton_stewart algs are working properly
+    # they do not yet have tests.
     GeneticCounseling("genetic counseling 1 Control.txt")
     GeneticCounseling("genetic counseling 2 Control.txt")
     outputted_file1 = open("genetic counseling 1 Output.txt")
@@ -371,8 +373,8 @@ end
     result1 = readlines(outputted_file1)
     result2 = readlines(outputted_file2)
 
-    @test result1[2] == " The risk =  0.03892."
-    @test result2[2] == " The risk =  0.83986."
+    @test result1[2] == " The risk =  0.03892." #this input is in Mendel too, and result is the same
+    @test result2[2] == " The risk =  0.83986." #this input is not in Mendel
 end
 
 #current coverage = (83, 91) ~ 91.2%
