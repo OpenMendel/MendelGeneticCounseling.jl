@@ -5,16 +5,16 @@ Genetic Counseling is a component of the umbrella [OpenMendel](https://openmende
 Genetic Counseling will handle fairly complicated problems involving mutation, reduced penetrance, and linked markers. Genetic Counseling does not provide empiric risks or theoretical risks under models for genetic heterogeneity or polygenic inheritance.
 
 ### Installation
-*Note: The three OpenMendel packages (1) [SnpArrays](https://openmendel.github.io/SnpArrays.jl/latest/), (2) [Search](https://openmendel.github.io/Search.jl), and (3) [MendelBase](https://openmendel.github.io/MendelBase.jl) must be installed before any other OpenMendel package will run. It is easiest if these three packages are installed in the above order and before any other OpenMendel package.*
+*Note: The three OpenMendel packages (1) [SnpArrays](https://openmendel.github.io/SnpArrays.jl/latest/), (2) [MendelSearch](https://openmendel.github.io/MendelSearch.jl), and (3) [MendelBase](https://openmendel.github.io/MendelBase.jl) must be installed before any other OpenMendel package will run. It is easiest if these three packages are installed in the above order and before any other OpenMendel package.*
 
 Within Julia, use the package manager to install MendelGeneticCounseling:
 
-    Pkg.clone("https://github.com/OpenMendel/MendelGeneticCounseling.jl.git")
+    pkg> add https://github.com/OpenMendel/MendelGeneticCounseling.jl.git
 
-This package supports Julia v0.4 and v0.5.
+This package supports Julia v1.0+
 
 ### Input Files
-The Genetic Counseling analysis package uses the following input files. Example input files can be found in the [docs](https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/docs) subfolder of the Genetic Counseling project. (An analysis won't always need every file type below.)
+The Genetic Counseling analysis package uses the following input files. Example input files can be found in the [data](https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/data) subfolder of the Genetic Counseling project. (An analysis won't always need every file type below.)
 
 * [Control File](#control-file): Specifies the names of your data input and output files and any optional parameters (*keywords*) for the analysis. (For a list of common keywords, see [Keywords Table](https://openmendel.github.io/MendelBase.jl/#keywords-table)).
 * [Locus File](https://openmendel.github.io/MendelBase.jl/#locus-file): Names and describes the genetic loci in your data.
@@ -47,7 +47,7 @@ Below is an example of a simple Control file to run Genetic Counseling:
 In the example above, there are six keywords. The first four keywords specify input and output files: *genetic counseling 2 LocusFrame.txt*, *genetic counseling 2 PedigreeFrame.txt*, *genetic counseling 2 PhenotypeFrame.txt*, and *genetic counseling 2 Output.txt*. The last two keywords specify analysis parameters: *eliminate_genotypes* and *lump_alleles*. The text after the '=' are the keyword values. A list of OpenMendel keywords common to most analysis package can be found [here](https://openmendel.github.io/MendelBase.jl/#keywords-table). The names of keywords are *not* case sensitive. (The keyword values *may* be case sensitive.)
 
 ### Data Files
-Genetic Counseling requires a [Control file](https://openmendel.github.io/MendelBase.jl/#control-file), and a [Pedigree file](https://openmendel.github.io/MendelBase.jl/#pedigree-file). Genotype data can be included in the Pedigree file, in which case a [Locus file](https://openmendel.github.io/MendelBase.jl/#locus-file) is required. Alternatively, genotype data can be provided in a [SNP data file](https://openmendel.github.io/MendelBase.jl/#snp-data-file), in which case a [SNP Definition File](https://openmendel.github.io/MendelBase.jl/#snp-definition-file) is required. OpenMendel will also accept [PLINK format](http://zzz.bwh.harvard.edu/plink) FAM and BIM files. Details on the format and contents of the Control and data files can be found on the [MendelBase](https://openmendel.github.io/MendelBase.jl) documentation page. There are example data files in the Genetic Counseling [docs](https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/docs) folder.
+Genetic Counseling requires a [Control file](https://openmendel.github.io/MendelBase.jl/#control-file), and a [Pedigree file](https://openmendel.github.io/MendelBase.jl/#pedigree-file). Genotype data can be included in the Pedigree file, in which case a [Locus file](https://openmendel.github.io/MendelBase.jl/#locus-file) is required. Alternatively, genotype data can be provided in a [SNP data file](https://openmendel.github.io/MendelBase.jl/#snp-data-file), in which case a [SNP Definition File](https://openmendel.github.io/MendelBase.jl/#snp-definition-file) is required. OpenMendel will also accept [PLINK format](http://zzz.bwh.harvard.edu/plink) FAM and BIM files. Details on the format and contents of the Control and data files can be found on the [MendelBase](https://openmendel.github.io/MendelBase.jl) documentation page. There are example data files in the Genetic Counseling [data](https://github.com/OpenMendel/MendelGeneticCounseling.jl/tree/master/data) folder.
 
 ### Running the Analysis
 
