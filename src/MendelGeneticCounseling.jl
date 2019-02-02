@@ -1,3 +1,5 @@
+__precompile__()
+
 """
 This module orchestrates a genetic counseling analysis.
 """
@@ -5,16 +7,13 @@ module MendelGeneticCounseling
 #
 # Required OpenMendel packages and modules.
 #
-using MendelBase                        # From package MendelBase.
-# using DataStructures                  # Now in MendelBase.
-# using ModelConstruction               # Now in MendelBase.
-# using ElstonStewartPreparation        # Now in MendelBase.
-# using ElstonStewartEvaluation         # Now in MendelBase.
-using SearchSetup                       # From package Search.
+using MendelBase
+using SearchSetup   # From package MendelSearch.
 #
 # Required external modules.
 #
-using DataFrames                        # From package DataFrames.
+using DataFrames
+using Printf
 
 export GeneticCounseling
 
@@ -23,7 +22,7 @@ This is the wrapper function for the Genetic Counseling analysis option.
 """
 function GeneticCounseling(control_file = ""; args...)
 
-  const GENETIC_COUNSELING_VERSION :: VersionNumber = v"0.1.0"
+  GENETIC_COUNSELING_VERSION :: VersionNumber = v"0.1.0"
   #
   # Print the logo. Store the initial directory.
   #
@@ -257,6 +256,12 @@ function transmission_genetic_counseling(person::Person, locus::Locus,
   if !found; trans = 1.0; end
   return trans
 end # function transmission_genetic_counseling
+#
+# Method to obtain path to this package's data files
+# so they can be used in the documentation and testing routines.
+# For example, datadir("Control file.txt") will return
+# "/path/to/package/data/Control file.txt"
+#
+datadir(parts...) = joinpath(@__DIR__, "..", "data", parts...)
 
 end # module MendelGeneticCounseling
-

@@ -1,0 +1,22 @@
+name = "MendelGeneticCounseling"
+desc = "Genetic Counseling; part of the OpenMendel project."
+uuid = "5eee5fa4-c0d8-5591-aecf-5d586585de4b"
+version = "0.5.0"
+license = "MIT"
+authors = ["Kenneth Lange", "Eric Sobel"]
+keywords = ["OpenMendel", "Genetic Counseling"]
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+MendelBase = "4fb2d825-8540-5432-a3a3-b9ff66df2cb5"
+MendelSearch = "4fa469e6-9890-5c68-874e-584f43f9cdde"
+Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+
+[compat]
+julia = "1.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
