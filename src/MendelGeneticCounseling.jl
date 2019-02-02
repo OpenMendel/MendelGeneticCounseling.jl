@@ -8,11 +8,12 @@ module MendelGeneticCounseling
 # Required OpenMendel packages and modules.
 #
 using MendelBase
-using SearchSetup   # From package MendelSearch.
+using MendelSearch
 #
 # Required external modules.
 #
 using DataFrames
+using LinearAlgebra
 using Printf
 
 export GeneticCounseling
@@ -22,7 +23,7 @@ This is the wrapper function for the Genetic Counseling analysis option.
 """
 function GeneticCounseling(control_file = ""; args...)
 
-  GENETIC_COUNSELING_VERSION :: VersionNumber = v"0.1.0"
+  GENETIC_COUNSELING_VERSION :: VersionNumber = v"0.5.0"
   #
   # Print the logo. Store the initial directory.
   #
