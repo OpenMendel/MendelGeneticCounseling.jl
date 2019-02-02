@@ -3,7 +3,7 @@ desc = "Genetic Counseling; part of the OpenMendel project."
 uuid = "5eee5fa4-c0d8-5591-aecf-5d586585de4b"
 version = "0.5.0"
 license = "MIT"
-authors = ["Kenneth Lange", "Eric Sobel"]
+authors = ["Kenneth Lange <klange@ucla.edu>", "Eric Sobel <esobel@ucla.edu>", "OpenMendel Team"]
 keywords = ["OpenMendel", "Genetic Counseling"]
 
 [deps]
