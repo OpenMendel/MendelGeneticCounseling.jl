@@ -1,0 +1,5 @@
+Locus,Allele,Chromosome,FemaleMorgans,European
+MD,+,Autosome,0.0,1.0e-5
+MD,-,Autosome,0.0,0.99999
+Se,+,Autosome,0.0871766935723889,0.52
+Se,-,Autosome,0.0871766935723889,0.48

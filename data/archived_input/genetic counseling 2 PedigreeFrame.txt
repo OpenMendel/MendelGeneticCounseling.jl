@@ -1,0 +1,15 @@
+Pedigree,Person,Mother,Father,Sex,MD,Se
+Top,1,,,male,Affected,+
+Top,2,,,female,Normal,+
+Top,5,,,male,Normal,-
+Top,3,2,1,male,Affected,+
+Top,4,2,1,female,Affected,+
+Top,6,4,5,male,Affected,-
+Top,7,4,5,male,Affected,-
+Bottom,1,,,male,Affected,+
+Bottom,2,,,female,Normal,+
+Bottom,5,,,male,Normal,-
+Bottom,3,2,1,male,Affected,+
+Bottom,4,2,1,female,Affected,+
+Bottom,6,4,5,male,Affected,-
+Bottom,7,4,5,male,,-
