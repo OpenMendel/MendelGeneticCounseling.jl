@@ -1,5 +1,5 @@
 ### Overview
-Genetic Counseling is a component of the umbrella [OpenMendel](https://openmendel.github.io) project. This analysis option computes risks to individuals in pedigrees segregating Mendelian diseases. As a conditional probability, a genetic risk involves two likelihoods, a numerator likelihood with the riskee having an disease genotype or phenotype at the disease locus and a denominator likelihood with the riskee having an unknown or non-specific phenotype at the disease locus. Depending on the problem, complicating features such as age of onset, mutation, linked markers, and biochemical tests come into play.
+Genetic Counseling is a component of the umbrella [OpenMendel](https://openmendel.github.io) project. This analysis option computes risks to individuals in pedigrees segregating Mendelian diseases. As a conditional probability, a genetic risk involves two likelihoods, a numerator likelihood with the riskee having an disease genotype or phenotype at the disease locus and a denominator likelihood with the riskee having an unknown or non-specific phenotype at the disease locus.
 
 ### Appropriate Problems and Data Sets
 Genetic Counseling will handle fairly complicated problems involving mutation, reduced penetrance, and linked markers. Genetic Counseling does not provide empiric risks or theoretical risks under models for genetic heterogeneity or polygenic inheritance.
@@ -72,7 +72,7 @@ Finally, to run the analysis using the parameters in your Control file, for exam
 
 If you use this analysis package in your research, please cite the following reference in the resulting publications:
 
-*Lange K, Papp JC, Sinsheimer JS, Sripracha R, Zhou H, Sobel EM (2013) Mendel: The Swiss army knife of genetic analysis programs. Bioinformatics 29:1568-1570.*
+*OPENMENDEL: a cooperative programming project for statistical genetics. Zhou H, Sinsheimer JS, Bates DM, Chu BB, German CA, Ji SS, Keys KL, Kim J, Ko S, Mosher GD, Papp JC, Sobel EM, Zhai J, Zhou JJ, Lange K. Hum Genet. 2019 Mar 26. doi: 10.1007/s00439-019-02001-z. [Epub ahead of print] PMID: 30915546*
 
 <!--- ### Contributing
 We welcome contributions to this Open Source project. To contribute, follow this procedure ... --->
