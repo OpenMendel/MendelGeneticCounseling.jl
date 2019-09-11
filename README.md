@@ -10,7 +10,7 @@ This [Julia](http://julialang.org/) package performs risk calculations for genet
 
 Within Julia, use the package manager to install MendelGeneticCounseling:
 
-    pkg> add https://github.com/OpenMendel/MendelGeneticCounseling.jl.git
+    pkg> add https://github.com/OpenMendel/MendelGeneticCounseling.jl
 
 This package supports Julia v1.0+
 
