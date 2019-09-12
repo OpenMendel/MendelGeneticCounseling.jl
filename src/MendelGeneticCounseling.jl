@@ -59,7 +59,8 @@ end
 function search_variables!(x::Expr, var::Symbol)
     for i in eachindex(x.args)
         if x.args[i] == var # if the argument is one of the variables given then just put it in the right format df[:x1]
-            x.args[i] = Meta.parse(string(:input_data_from_user,"[", ":", var, "]"))
+###            x.args[i] = Meta.parse(string(:input_data_from_user,"[", ":", var, "]"))
+            x.args[i] = Meta.parse(string(:input_data_from_user,"[:, :", var, "]"))
         elseif x.args[i] isa Expr # else if the argument is an expression (i.e not a varaible (symbol) or a number) then
             search_variables!(x.args[i], var) #go through this function recursively on each of the arguments of the expression object
         end
@@ -97,15 +98,12 @@ end
 ####### 
 #######
 function GeneticCounseling(control_file = ""; args...)
-
-  GENETIC_COUNSELING_VERSION :: VersionNumber = v"0.6.0"
   #
   # Print the logo. Store the initial directory.
   #
   print(" \n \n")
   println("     Welcome to OpenMendel's")
-  println(" Genetic Counseling analysis option")
-  println("        version ", GENETIC_COUNSELING_VERSION )
+  println(" Genetic Counseling Analysis Option")
   print(" \n \n")
   println("Reading the data.\n")
   initial_directory = pwd()
@@ -122,7 +120,7 @@ function GeneticCounseling(control_file = ""; args...)
   # keywords needed for Genetic Counseling are glm_mean, inverse_link
   # distribution
     keyword["glm_mean"] = "0.0"
-    keyword["glm_inv_link"] = "IdentityLink"
+    keyword["glm_link"] = "IdentityLink"
     keyword["glm_response"] = "NormalDist"
     keyword["glm_trait"] = "Affected"
     keyword["glm_trials"]=1
@@ -176,12 +174,12 @@ function GeneticCounseling(control_file = ""; args...)
      if keyword["penetrance_file"] == ""
         println(" no penetrance file")
      else
-        pen_df = CSV.File(penetrancefile)  |> DataFrame!
+        pen_df = CSV.File(penetrancefile)  |> DataFrame
         names_pen = names(pen_df)
         names_ped = names(pedigree_frame)
         names_risk = intersect(names_pen, names_ped)
         risk_factors = length(names_risk)
-#        status = string(keyword["disease_status"]
+#        status = string(keyword["disease_status"])
         println("this problem has $risk_factors factors called $names_risk")
 #
 # Make penetrance dataframe into a dictionary
@@ -195,8 +193,11 @@ function GeneticCounseling(control_file = ""; args...)
      end
 
         q = size(pedigree_frame,1)
-    pedigree_frame.allele1 =  missings(Int,q)
-    pedigree_frame.allele2 = missings(Int,q)
+##    pedigree_frame.allele1 =  missings(Int,q)
+##    pedigree_frame.allele2 = missings(Int,q)
+    pedigree_frame[!, :allele1] = missings(Int,q)
+    pedigree_frame[!, :allele2] = missings(Int,q)
+
     println(" \nAnalyzing the data.\n")
     execution_error = genetic_counseling_option(pedigree, person,
       nuclear_family, locus, locus_frame, phenotype_frame, pedigree_frame,
@@ -308,13 +309,15 @@ function penetrance_genetic_counseling(person::Person, locus::Locus,
     allele1 = multi_genotype[1, l]
     allele2 = multi_genotype[2, l]
     loc = locus.model_locus[l]
-    pedigree_frame.allele1[i]=allele1
-    pedigree_frame.allele2[i]=allele2
-    single_frame= pedigree_frame[[i],:]
+##    pedigree_frame.allele1[i]=allele1
+##    pedigree_frame.allele2[i]=allele2
+    pedigree_frame[i, :allele1]=allele1
+    pedigree_frame[i, :allele2]=allele2
+    single_frame = DataFrame(pedigree_frame[i, :])
     if keyword["penetrance_file"] ==""
          glmmean = string(keyword["glm_mean"])
-         glminvlink = Symbol(keyword["glm_inv_link"])
-         w =mean_formula(glmmean,single_frame)   
+         glminvlink = Symbol(keyword["glm_link"])
+         w = mean_formula(glmmean,single_frame)   
          finv_link = getfield(Main,glminvlink)
          transmu = apply_inverse_link(w,finv_link())
          glmresponse = Symbol(keyword["glm_response"])
@@ -360,13 +363,11 @@ function prior_genetic_counseling(person::Person, locus::Locus,
   for l = start:finish
     loc = locus.model_locus[l]
     allele = multi_genotype[1, l]
-    frequency = dot(vec(person.admixture[i, :]),
-                    vec(locus.frequency[loc][:, allele]))
+    frequency = dot(person.admixture[i, :], locus.frequency[loc][:, allele])
     prior_prob = prior_prob * frequency
     if !locus.xlinked[loc] || !person.male[i]
       allele = multi_genotype[2, l]
-      frequency = dot(vec(person.admixture[i, :]),
-                      vec(locus.frequency[loc][:, allele]))
+      frequency = dot(person.admixture[i, :], locus.frequency[loc][:, allele])
       prior_prob = prior_prob * frequency
     end
   end
