@@ -28,7 +28,7 @@ function GeneticCounseling(control_file = ""; args...)
   #
   print(" \n \n")
   println("     Welcome to OpenMendel's")
-  println(" Genetic Counseling analysis option")
+  println(" Genetic Counseling Analysis Option")
   print(" \n \n")
   println("Reading the data.\n")
   initial_directory = pwd()
@@ -63,6 +63,11 @@ function GeneticCounseling(control_file = ""; args...)
   (pedigree, person, nuclear_family, locus, snpdata,
     locus_frame, phenotype_frame, person_frame, snp_definition_frame) =
     read_external_data_files(keyword)
+  #
+  # Insert mutation information into the locus data structure.
+  # At most one type of mutation event is allowed.
+  #
+  process_mutation_keyword(locus, keyword)
   #
   # Check if SNP data were read.
   #
@@ -156,6 +161,20 @@ function penetrance_genetic_counseling(person::Person, locus::Locus,
     allele2 = multi_genotype[2, l]
     p = 1.0 # for reduced penetrance let p depend on loc
     loc = locus.model_locus[l]
+    if loc == locus.mutable_locus 
+#       x = person_frame[i, :LogCPK]
+#       if !ismissing(x)
+#         glm_scale = 0.3255
+#         glm_mean = 1.835
+#         if allele1 == 2 || allele2 == 2
+#           glm_mean = glm_mean + 0.265  
+#         else
+#           glm_mean = glm_mean - 0.265 
+#         end
+#         dist = Normal(glm_mean, glm_scale)
+#         p = pdf.(dist, x)
+#       end
+    end
     pen = p * pen
   end
   return pen
@@ -186,79 +205,146 @@ end # function prior_genetic_counseling
 """
 Supply the transmission probability that a parent i with a particular
 genotype transmits a particular gamete to his or her child j.
+This version of the transmission function allows mutation.
 """
 function transmission_genetic_counseling(person::Person, locus::Locus,
   gamete::Vector{Int}, multi_genotype::Matrix{Int}, par::Vector{Float64},
   person_frame::DataFrame, keyword::Dict{AbstractString, Any},
   startlocus::Int, finishlocus::Int, i::Int, j::Int)
   #
+  # Store the sex of the parent as an integer; 1 for female and 2 for male.
+  #
+  i_sex = person.male[i] + 1 
+  xlinked = locus.xlinked[locus.model_locus[startlocus]]
+  rate = locus.mutation_rate[i_sex]
+  #
   # For male to male inheritance at an x-linked locus,
   # set the transmission probability equal to 1.
-  #
-  loc = locus.model_locus[startlocus]
-  xlinked = locus.xlinked[loc]
-  if xlinked && person.male[i] && person.male[j]
-      return trans = 1.0
-  end
-  #
-  # Allow for linked markers but no mutation.
-  # Start by storing an indicator of the sex of the parent.
-  #
-  if person.male[i]
-    i_sex = 2
-  else
-    i_sex = 1
-  end
-  #
-  # Reduce the computations by considering only the heterozygous loci.
-  # Use Trow's formula to express the recombination fraction
-  # between two heterozygous loci in terms of the recombination
-  # fractions between the adjacent loci that separate them.
-  # Set the logical variable found to true when the first heterozygous
-  # parental locus is found. Phase records the phase of the most
-  # recent heterozygous parental locus.
+  # For male to female transmission, account for matching and mutation.
   #
   trans = 1.0
-  found = false
-  phase = true
-  r = 0.5
+  if xlinked && person.male[i]
+    if person.male[j]
+      return trans
+    else
+      for l = startlocus:finishlocus
+        (k, m) = (multi_genotype[2, l], gamete[l])
+        if locus.model_locus[l] !== locus.mutable_locus
+          if m != k
+            return trans = 0.0
+          end
+        else
+          if k == locus.donor_allele
+            if m == locus.recipient_allele
+              trans = trans * rate
+            elseif m == k
+              trans = trans * (1.0 - rate)
+            else
+              return trans = 0.0
+            end
+          end
+        end
+      end
+    end
+    return trans
+  end
+  #
+  # Consider autosomal transmission or maternal X-linked transmission.
+  #
+  both = trues(b)
+  source = ones(Int, b)
   for l = startlocus:finishlocus
-    match1 = multi_genotype[1, l] == gamete[l]
-    match2 = multi_genotype[2, l] == gamete[l]
+    (k, m1, m2) = (gamete[l], multi_genotype[1, l], multi_genotype[2, l])
+    match1 = k == m1
+    match2 = k == m2
     #
-    # Check whether either the first or second parental gene at
-    # the current locus matches the gamete gene at this locus.
-    # If not, then return with 0 for the transmission probability.
+    # Allow for a mutational match.
+    #
+    if locus.model_locus[l] == locus.mutable_locus
+      if k == locus.recipient_allele
+        match1 = match1 || m1 == locus.donor_allele 
+        match2 = match2 || m2 == locus.donor_allele 
+      end
+    end
+    #
+    # Check whether either the first or second parental gene at the 
+    # current locus matches or is mutable to the gamete gene at this 
+    # locus. If not, then return with 0 for the transmission probability.
     #
     if !match1 && !match2
       return trans = 0.0
     end
     #
-    # Check whether the current locus is heterozygous.
+    # Initialize the source vector.
     #
-    if match1 != match2
-      if found
-        if phase == match1
-          trans = trans * (0.5 + r)
-        else
-          trans = trans * (0.5 - r)
-        end
-      else
-        found = true
-        if startlocus == 1 || startlocus == finishlocus
-          trans = 0.5
-        else
-          trans = 1.0
+    if !match1
+      source[l] = 2
+    end
+    both[l] = match1 && match2
+  end
+  #
+  # Generate the next gamete from the parental genes which is identical
+  # or mutable to the child's gamete.  These are taken in reverse dictionary
+  # order as strings from the two letter alphabet with letters 1 and 2.
+  #
+  (trans, found, finished, first_gamete) = (0.0, false, false, true)
+  while !finished
+    if !first_gamete
+      for l = startlocus:finishlocus
+        found = false
+        if both[l] 
+          if source[l] == 1 
+            source[l] = 2
+            found = true
+            break
+          else
+            source[l] = 1
+          end
         end
       end
-      phase = match1
-      r = 0.5
+      if !found
+        finished = true 
+        break
+      end
     end
-    if found && l < finishlocus
-      r = r * (1.0 - 2.0 * locus.theta[i_sex, l])
+    first_gamete = false
+    if !finished
+      #
+      # Initialize the transmission probability for this parental gamete.
+      #
+      if startlocus == 1 
+        r = 0.5
+      else
+        r = 1.0
+      end
+      #
+      # Compute the remaining factors of the transmission probability.
+      # Start by including mutation.
+      #
+      for l = startlocus:finishlocus
+        if locus.model_locus[l] == locus.mutable_locus
+          if multi_genotype[source[l], l] == locus.donor_allele 
+            if gamete[l] == locus.recipient_allele 
+              r = r * rate
+            else
+              r = r * (1.0 - rate)
+            end
+          end
+        end
+        #
+        # Pick up the recombination fractions.
+        #
+        if l < finishlocus 
+          if source[l] == source[l + 1] 
+            r = r * (1.0 - locus.theta[i_sex, l])
+          else
+            r = r * locus.theta[i_sex, l]
+          end
+        end
+      end
+      trans = trans + r
     end
   end
-  if !found; trans = 1.0; end
   return trans
 end # function transmission_genetic_counseling
 #
@@ -268,5 +354,57 @@ end # function transmission_genetic_counseling
 # "/path/to/package/data/Control file.txt"
 #
 datadir(parts...) = joinpath(@__DIR__, "..", "data", parts...)
+
+"""
+Checks and interprets the mutation keyword.
+"""
+function process_mutation_keyword(locus::Locus,
+  keyword::Dict{AbstractString, Any})
+#
+  println("mutation info = ",keyword["mutation"])
+  value = split(keyword["mutation"], ',', keepempty = false)
+  if length(value) == 0
+    locus.mutable_locus = 0
+    return
+  elseif length(value) != 5
+    throw(ArgumentError(
+        "The keyword mutation must take exactly five values.\n \n"))
+  end
+  loc = something(findfirst(isequal(value[1]), locus.name), 0)
+  if loc == 0
+    throw(ArgumentError(
+        "Not a valid name for a mutating locus.\n \n"))
+  else    
+    locus.mutable_locus = loc
+  end
+  i = something(findfirst(isequal(value[2]), locus.allele_name[loc]), 0) 
+  if i == 0
+    throw(ArgumentError(
+        "Not a valid name for a mutating allele.\n \n"))
+  else  
+    locus.donor_allele = i
+  end
+  i = something(findfirst(isequal(value[3]), locus.allele_name[loc]), 0) 
+  if i == 0
+    throw(ArgumentError(
+        "Not a valid name for an allele mutated to.\n \n"))
+  else
+    locus.recipient_allele = i  
+  end
+  v4 = parse(Float64, value[4])
+  if v4 < 0.0 || v4 > 1.0
+     throw(ArgumentError(
+        "Not a valid female mutation rate.\n \n"))
+  else
+    locus.mutation_rate[1] = v4 
+  end
+  v5 = parse(Float64, value[5])
+  if v5 < 0.0 || v5 > 1.0
+     throw(ArgumentError(
+        "Not a valid fmale mutation rate.\n \n"))
+  else
+    locus.mutation_rate[2] = v5 
+  end
+end
 
 end # module MendelGeneticCounseling
